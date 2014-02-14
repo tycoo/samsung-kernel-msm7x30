@@ -485,8 +485,8 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 					 min_score_adj,
 					 other_free * (long)(PAGE_SIZE / 1024));
 			lowmem_deathpending_timeout = jiffies + HZ;
-			send_sig(SIGKILL, selected[proc_type], 0);
 			set_tsk_thread_flag(selected[proc_type], TIF_MEMDIE);
+			send_sig(SIGKILL, selected[proc_type], 0);
 			rem -= selected_tasksize[proc_type];
 			break;
 		}
