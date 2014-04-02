@@ -62,6 +62,7 @@ config ARCH_MSM7X30
 	select HOLES_IN_ZONE if SPARSEMEM
 	select MSM_MODEM_RESTART
 	select ARM_HAS_SG_CHAIN
+	select HAS_MACH_MEMUTILS
 
 config ARCH_QSD8X50
 	bool "QSD8X50"
@@ -2670,7 +2671,7 @@ config FORCE_FAST_CHARGE
 
 config HAS_MACH_MEMUTILS
 	default n
-	bool "Motorola MSM memcpy enhancements"
+	bool "Samsung MSM memcpy enhancements"
 	help
 	Faster memcpy performance for Krait
 
