@@ -147,6 +147,32 @@ enum lowmem_process_type {
 			pr_info(x);			\
 	} while (0)
 
+static bool avoid_to_kill(uid_t uid)
+{
+	/*
+	 * uid info
+	 * uid == 0 > root
+	 * uid == 1001 > radio
+	 * uid == 1002 > bluetooth
+	 * uid == 1010 > wifi
+	 * uid == 1014 > dhcp
+	 */
+	if (uid == 0 || uid == 1001 || uid == 1002 || uid == 1010 || 
+			uid == 1014) 
+		return 1;
+	return 0;
+}
+
+static bool protected_apps(char *comm)
+{
+	if (strcmp(comm, "d.process.acore") == 0 ||
+			strcmp(comm, "ndroid.systemui") == 0 ||
+			strcmp(comm, "ndroid.contacts") == 0 ||
+			strcmp(comm, "system:ui") == 0)
+		return 1;
+	return 0;
+}
+
 static int test_task_flag(struct task_struct *p, int flag)
 {
 	struct task_struct *t = p;
@@ -340,6 +366,8 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 {
 	struct task_struct *tsk;
 	struct task_struct *selected[MANAGED_PROCESS_TYPES] = {NULL};
+	const struct cred *pcred; 
+	unsigned int uid = 0;
 	int rem = 0;
 	int tasksize;
 	int i;
@@ -491,11 +519,19 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 			    tasksize <= selected_tasksize[proc_type])
 				continue;
 		}
-		selected[proc_type] = p;
-		selected_tasksize[proc_type] = tasksize;
-		selected_oom_score_adj[proc_type] = oom_score_adj;
-		lowmem_print(2, "select '%s' (%d), adj %d, size %d, to kill\n",
-			     p->comm, p->pid, oom_score_adj, tasksize);
+		pcred = __task_cred(p);
+		uid = pcred->uid;
+		if ((!avoid_to_kill(uid) && !protected_apps(p->comm)) ||
+				tasksize * (long)(PAGE_SIZE / 1024) >= 80000) {
+			selected[proc_type] = p;
+			selected_tasksize[proc_type] = tasksize;
+			selected_oom_score_adj[proc_type] = oom_score_adj;
+			lowmem_print(2, "select %d (%s), adj %hd, size %d, to kill\n",
+			     	p->pid, p->comm, oom_score_adj, tasksize);
+		} else {
+			lowmem_print(2, "selected skipped %d (%s), adj %hd, size %d, to kill\n",
+			     	p->pid, p->comm, oom_score_adj, tasksize);
+		}
 	}
 
 	/* For each managed process type check if a process to be killed has been found:
