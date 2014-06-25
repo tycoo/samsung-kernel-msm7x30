@@ -73,7 +73,7 @@ static unsigned long lowmem_deathpending_timeout;
 
 #ifdef CONFIG_ANDROID_LOW_MEMORY_KILLER_DO_NOT_KILL_PROCESS
 #define MAX_NOT_KILLABLE_PROCESSES	25	/* Max number of not killable processes */
-#define MANAGED_PROCESS_TYPES		3	/* Numer of managed process types (lowmem_process_type) */
+#define MANAGED_PROCESS_TYPES		15	/* Numer of managed process types (lowmem_process_type) */
 
 /*
  * Enumerator for the managed process types
@@ -131,7 +131,7 @@ static bool is_in_donotkill_sysproc_list(char *proc_name)
 	return is_in_donotkill_list(proc_name, &donotkill_sysproc);
 }
 #else
-#define MANAGED_PROCESS_TYPES		1	/* Numer of managed process types (lowmem_process_type) */
+#define MANAGED_PROCESS_TYPES		3	/* Numer of managed process types (lowmem_process_type) */
 
 /*
  * Enumerator for the managed process types
