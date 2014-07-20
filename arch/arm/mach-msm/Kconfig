@@ -62,7 +62,6 @@ config ARCH_MSM7X30
 	select HOLES_IN_ZONE if SPARSEMEM
 	select MSM_MODEM_RESTART
 	select ARM_HAS_SG_CHAIN
-	select HAS_MACH_MEMUTILS
 
 config ARCH_QSD8X50
 	bool "QSD8X50"
@@ -177,7 +176,6 @@ config ARCH_MSM8960
 	select USE_USER_ACCESSIBLE_TIMERS
 	select ARM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_USE_USER_ACCESSIBLE_TIMERS
-	select HAS_MACH_MEMUTILS
 
 config ARCH_MSM8930
 	bool "MSM8930"
@@ -248,7 +246,6 @@ config ARCH_APQ8064
 	select USE_USER_ACCESSIBLE_TIMERS
 	select ARM_USE_USER_ACCESSIBLE_TIMERS
 	select MSM_USE_USER_ACCESSIBLE_TIMERS
-	select HAS_MACH_MEMUTILS
 
 config ARCH_MSM8974
 	bool "MSM8974"
@@ -2736,11 +2733,4 @@ config FORCE_FAST_CHARGE
 	help
 	  A simple sysfs interface to force adapters that
 	  are detected as USB to charge as AC.
-
-config HAS_MACH_MEMUTILS
-	default n
-	bool "Samsung MSM memcpy enhancements"
-	help
-	Faster memcpy performance for Krait
-
 endif
