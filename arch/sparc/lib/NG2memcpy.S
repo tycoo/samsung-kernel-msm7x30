@@ -238,6 +238,7 @@ FUNC_NAME:	/* %o0=dst, %o1=src, %o2=len */
 
 	alignaddr	%o1, %g0, %g0
 
+	membar		#Sync
 	add		%o1, (64 - 1), %o4
 	andn		%o4, (64 - 1), %o4
 	andn		%o2, (64 - 1), %g1
