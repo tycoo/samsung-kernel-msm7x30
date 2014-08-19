@@ -566,14 +566,15 @@ static int lowmem_shrink(struct shrinker *s, struct shrink_control *sc)
 			set_tsk_thread_flag(selected[proc_type], TIF_MEMDIE);
 			send_sig(SIGKILL, selected[proc_type], 0);
 			rem -= selected_tasksize[proc_type];
+			rcu_read_unlock();
+			/* give the system time to free up the memory */
+			msleep_interruptible(20);
 			break;
 		}
 	}
 
 	rcu_read_unlock();
-	/* give the system time to free up the memory */
-	msleep_interruptible(20);
-
+	
 	lowmem_print(4, "lowmem_shrink %lu, %x, return %d\n",
 		     nr_to_scan, sc->gfp_mask, rem);
 	mutex_unlock(&scan_mutex);
