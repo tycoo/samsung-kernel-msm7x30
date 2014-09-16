@@ -182,7 +182,7 @@ static struct platform_device ion_dev;
 #elif defined(CONFIG_MSM_MEMORY_EXTRA_HIGH)	// +20 MB of free RAM
 #define MSM_ION_SF_SIZE			0x0800000	//     8.388.608 Bytes =   8 MB
 #else						// Default free RAM
-#define MSM_ION_SF_SIZE			0x1C00000	//    29.360.128 Bytes =  28 MB
+#define MSM_ION_SF_SIZE			0x1D00000
 #endif
 #define MSM_ION_AUDIO_SIZE		0x0200000	//     2.097.152 Bytes =   2 MB
 
